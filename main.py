@@ -1,6 +1,6 @@
-
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
 from pydantic import BaseModel
 from datetime import datetime
 from typing import Optional
@@ -15,7 +15,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# In-memory storage
 tasks = []
 counter = 1
 
@@ -23,6 +22,10 @@ class Task(BaseModel):
     title: str
     status: str
     created_at: Optional[datetime] = None
+
+@app.get("/")
+def serve_frontend():
+    return FileResponse("index.html")
 
 @app.post("/list")
 def create_task(task: Task):
